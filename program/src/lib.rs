@@ -13,21 +13,12 @@ use solana_program::{
 };
 
 fn process_instruction(
-    // program id is nothing but the id of this program on the solana network.
+    // program id on solana network
     program_id: &Pubkey,
-    // When we invoke our program we can 
-    // give meta data of all the account we 
-    // want to work with.
-    // As you can see it is a array of AccountInfo.
-    // We can provide as many as we want.
+    // accounts passed for instruciton creation
     accounts: &[AccountInfo],
-    // This is the data we want to process our instruction for.
-    // It is a list of 8 bitunsigned integers(0..255).
+    // need to process
     instruction_data: &[u8],
-    
-    // Here we specify the return type.
-    // If you know a little bit of typescript. 
-    // This was of writing types and returns types might we familiar to you.
 ) -> ProgramResult {
     //First run a check if we got any instruction data at all
      if instruction_data.len() == 0 {
@@ -59,10 +50,6 @@ fn process_instruction(
     msg!("Didn't find the entrypoint required");
     Err(ProgramError::InvalidInstructionData)
 
-    /*
-    And then since we can't return null in Rust we pass `Ok(())` to make it compile
-    It means the program executed successfully.
-    */
 }
 
 entrypoint!(process_instruction);
@@ -96,9 +83,7 @@ fn create_campaign(
     let mut campaign_info = CampaignDetails::try_from_slice(&instruction_data)?;
 
     // Now I want that for a campaign created the only admin should be the one who created it.
-    // You can add additional logical here to check things like
-    // The image url should not be null
-    // The name shouldn't be smaller than some specific length...
+    // will add additional logic here
     if campaign_info.admin != *initializer_acc.key {
         msg!("Admin is not the same as creator");
         return Err(ProgramError::InvalidInstructionData);
